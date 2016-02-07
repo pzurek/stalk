@@ -1,5 +1,5 @@
 # stalk
-A little command-line stalker using the Clearbit API
+A little command-line stalker using the Clearbit API. It's just a little toy app I use to test the [Clearbit client library](https://github.com/pzurek/clearbit).
 
 # Installation
 
