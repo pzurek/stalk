@@ -98,36 +98,44 @@ func stalk(email string) {
 	}
 
 	person := enrichment.Person
+	printName(person)
+	printEmployment(person)
+	printLinks(person)
+}
 
-	if person.Name.FullName != nil {
-		fmt.Println("Success!")
-		fmt.Printf("This email seems to belong to: %s\n", *person.Name.FullName)
+func printName(p *clearbit.Person) {
+	if p.Name.FullName != nil {
+		fmt.Printf("This email seems to belong to: %s\n", *p.Name.FullName)
 	}
+}
 
-	if person.Employment.Name != nil {
-		if person.Employment.Title != nil {
-			fmt.Printf("Looks like they are working at %s as a %s\n", *person.Employment.Name, *person.Employment.Title)
+func printEmployment(p *clearbit.Person) {
+	if p.Employment.Name != nil {
+		if p.Employment.Title != nil {
+			fmt.Printf("Looks like they are working at %s as a %s\n", *p.Employment.Name, *p.Employment.Title)
 		} else {
-			fmt.Printf("Looks like they are working at %s\n", *person.Employment.Name)
+			fmt.Printf("Looks like they are working at %s\n", *p.Employment.Name)
 		}
 	}
+}
 
+func printLinks(p *clearbit.Person) {
 	links := map[string]string{}
 
-	if person.Facebook.Handle != nil {
-		links["facebook"] = fmt.Sprintf("Facebook: https://facebook.com/%s", *person.Facebook.Handle)
+	if p.Facebook.Handle != nil {
+		links["facebook"] = fmt.Sprintf("Facebook: https://facebook.com/%s", *p.Facebook.Handle)
 	}
-	if person.Twitter.Handle != nil {
-		links["twitter"] = fmt.Sprintf("Twitter:  https://twitter.com/%s", *person.Twitter.Handle)
+	if p.Twitter.Handle != nil {
+		links["twitter"] = fmt.Sprintf("Twitter:  https://twitter.com/%s", *p.Twitter.Handle)
 	}
-	if person.Github.Handle != nil {
-		links["github"] = fmt.Sprintf("GitHub:   https://github.com/%s", *person.Github.Handle)
+	if p.Github.Handle != nil {
+		links["github"] = fmt.Sprintf("GitHub:   https://github.com/%s", *p.Github.Handle)
 	}
-	if person.Linkedin.Handle != nil {
-		links["linkedin"] = fmt.Sprintf("LinkedIn: https://linkedin.com/%s", *person.Linkedin.Handle)
+	if p.Linkedin.Handle != nil {
+		links["linkedin"] = fmt.Sprintf("LinkedIn: https://linkedin.com/%s", *p.Linkedin.Handle)
 	}
-	if person.Googleplus.Handle != nil {
-		links["googleplus"] = fmt.Sprintf("Google+:  https://plus.google.com/%s", *person.Googleplus.Handle)
+	if p.Googleplus.Handle != nil {
+		links["googleplus"] = fmt.Sprintf("Google+:  https://plus.google.com/%s", *p.Googleplus.Handle)
 	}
 
 	if len(links) == 0 {
