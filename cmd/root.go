@@ -30,7 +30,7 @@ var (
 	cb          *clearbit.Client
 )
 
-// This represents the base command when called without any subcommands
+// RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "stalk",
 	Short: "A little command line stalker using the Clearbit API",
