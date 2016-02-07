@@ -15,22 +15,19 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
 
+	"github.com/pzurek/clearbit"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
-	"github.com/pzurek/clearbit"
 )
 
 var (
 	cfgFile     string
 	clearbitKey string
+	cb          *clearbit.Client
 )
 
 // This represents the base command when called without any subcommands
@@ -39,9 +36,7 @@ var RootCmd = &cobra.Command{
 	Short: "A little command line stalker using the Clearbit API",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-
 		email, _ := cmd.Flags().GetString("email")
-
 		stalk(email)
 	},
 }
@@ -89,38 +84,20 @@ func initConfig() {
 }
 
 func stalk(email string) {
-	baseURL := "https://person.clearbit.com/v2/combined/find?email="
-	url := baseURL + email
+	cb := clearbit.NewClient(clearbitKey, nil)
 
-	req, err := http.NewRequest("GET", url, nil)
+	enrichment, err := cb.Enrichements.GetCombined(email)
 	if err != nil {
-		log.Fatal(err)
-	}
-	req.SetBasicAuth(clearbitKey, "")
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer resp.Body.Close()
-
-	data := clearbit.Enrichment{}
-	b, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = json.Unmarshal(b, &data)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if data.Person == nil {
-		fmt.Println("Didn't find a person associated with this email")
+		log.Printf("Getting an enrichment failed: %s\n", err)
 		return
 	}
 
-	person := data.Person
+	if enrichment.Person == nil {
+		fmt.Printf("Didn't find a person associated with: %s\n", email)
+		return
+	}
+
+	person := enrichment.Person
 
 	if person.Name.FullName != nil {
 		fmt.Println("Success!")
