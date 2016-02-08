@@ -53,14 +53,9 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports Persistent Flags, which, if defined here,
-	// will be global for your application.
-
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.stalk/config.yaml)")
 	RootCmd.PersistentFlags().StringVar(&clearbitKey, "key", "", "ClearBit API key")
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
+
 	RootCmd.Flags().StringP("email", "e", "alex@clearbit.com", "Email of the person to find")
 }
 
